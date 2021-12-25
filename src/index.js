@@ -1,83 +1,290 @@
-import React,{Component} from "react";
+import React, { Component } from "react";
 import reactDom from "react-dom";
 
+const options = [
+  { value: "", label: "-- Select Country--" },
+  { value: "Finland", label: "Finland" },
+  { value: "Sweden", label: "Sweden" },
+  { value: "Norway", label: "Norway" },
+  { value: "Denmark", label: "Denmark" },
+];
+
+const selectOptions = options.map(({ value, label }) => (
+  <option value={value} key={value}>{label}</option>
+));
 
 class App extends Component {
-  
   state = {
-    firstName: '',
-    message: '',
-    key:'',
-  }
+    firstName: "",
+    lastName: "",
+    emial: "",
+    country: "",
+    tel: "",
+    dateOfBirth: "",
+    favoriteColor: "",
+    weight: "",
+    gender: "",
+    file: "",
+    bio: "",
+    skills: {
+      html: false,
+      css: false,
+      javascipt: false,
+    },
+  };
 
-  handleClick = (e) => {
-    this.setState({
-      message:'Welcome to the world events'
-    })
-  }
+  handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      this.setState({
+        skills: { ...this.state.skills, [name]: checked },
+      });
+    } else if (type === "file") {
+      console.log(type, "cehck here");
+      this.setState({ [name]: e.target.files[0] });
+    } else {
+      this.setState({ [name]: value });
+    }
+  };
 
-  handelMouseMove = (e) => {
-    this.setState({
-      message:'mouse is moving'
-    })
-  }
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const {
+      firstName,
+      lastName,
+      email,
+      tel,
+      dateOfBirth,
+      favoriteColor,
+      weight,
+      country,
+      gender,
+      bio,
+      file,
+      skills,
+    } = this.state;
+    const formattedSkills = [];
 
-  handelChange = (e) => {
-    this.setState({
-      firstName: e.target.value,
-      message:e.target.value,
-    })
-  }
+    for (const key in skills) {
+      console.log(key);
+      if (skills[key]) {
+        formattedSkills.push(key.toUpperCase());
+      }
+    }
 
-  handelKeyPress = (e) => {
-    this.setState({
-      message: `${e.target.value} has been pressed and the keycode is` + e.charcode,
-      
-    })
-  }
-
-  handelBlur = (e) => {
-    this.setState({
-      message:'Input field has been blurred'
-    })
-  }
-
-  handelCopy = (e) => {
-    this.setState({
-      message:'Using 30 Days of React for commercial purpose is not allowed'
-    })
-  }
+    const data = {
+      firstName,
+      lastName,
+      email,
+      tel,
+      dateOfBirth,
+      favoriteColor,
+      weight,
+      country,
+      gender,
+      bio,
+      file,
+      skills: formattedSkills,
+    };
+    console.log(data);
+  };
 
   render() {
+    const {
+      firstName,
+      lastName,
+      email,
+      tel,
+      dateOfBirth,
+      favoriteColor,
+      weight,
+      country,
+      gender,
+      bio,
+    } = this.state;
 
     return (
-      <div>
-        <h1>Welcome to the World of Events</h1>
-        <button onClick={this.handleClick}>Click Me</button>
-        <button onClick={this.handelMouseMove}>Move mouse on me</button>
-        <p onCopy={this.handelCopy}>Check copy right permission by copying this text </p>
-
-        <p>{this.state.message}</p>
-        <label htmlFor=''>Test for onKeyPres Event:</label>
-        <input type='text' onKeyPress={this.handelKeyPress} />
-        <br />
-
-        <label htmlFor=''>Test for onBlur Event:</label>
-        <input type='text' onBlur={this.handelBlur} />
-
-        <form>
-          <div>
-            <label htmlFor='firstName'>First Name:</label>
-            <input
-              onChange={this.handelChange}
-              name='firstName'
-              value={this.state.value}
-            />
-
-            <div>
-              <input type='submit' value='Submit' />
+      <div className="container">
+        <h3>Add Student</h3>
+        <form onSubmit={this.handleSubmit}>
+          <div className="row">
+            <div className="form-group">
+              <label htmlFor="firstName">First Name</label>
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={firstName}
+                onChange={this.handleChange}
+              />
             </div>
 
+            <div className="form-group">
+              <label htmlFor="lastName">Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={this.handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={email}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="tel">Telephone</label>
+            <input
+              type='tel'
+              name="tel"
+              placeholder="Tel"
+              value={tel}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="dateOfBirth">Date of birth</label>
+            <input
+              type="date"
+              name="dateOfBirth"
+              placeholder="Date of Birth"
+              value={dateOfBirth}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="favoriteColor">Favorite Color</label>
+            <input
+              type="color"
+              name="color"
+              placeholder="Favorite Color"
+              value={favoriteColor}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="weight">Weight </label>
+            <input
+              type="number"
+              id="weight"
+              name="weight"
+              defaultValue={weight}
+              onChange={this.handleChange}
+              placeholder="Weight in Kg"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="country">Country</label> <br />
+            <select
+              name="country"
+              onChange={this.handleChange}
+              id="country">
+              {selectOptions}
+            </select>
+          </div>
+
+          <div>
+            <p>Gender</p>
+            <div>
+              <input
+                type="radio"
+                id="female"
+                name="gender"
+                value="Female"
+                onChange={this.handleChange}
+                
+                defaultChecked={gender === "Female"}
+              />
+              <label htmlFor="female">Female</label>
+            </div>
+            <div>
+              <input
+                id="male"
+                type="radio"
+                name="gender"
+                value="Male"
+                onChange={this.handleChange}
+                defaultChecked={gender === "Male"}
+              />
+              <label htmlFor="male">Male</label>
+            </div>
+            <div>
+              <input
+                id="other"
+                type="radio"
+                name="gender"
+                value="Other"
+                onChange={this.handleChange}
+                defaultChecked={gender === "Other"}
+              />
+              <label htmlFor="other">Other</label>
+            </div>
+          </div>
+
+          <div>
+            <p>Select your skills</p>
+            <div>
+              <input
+                type='checkbox'
+                id='html'
+                name='html'
+                onChange={this.handleChange}
+              />
+              <label htmlFor='html'>HTML</label>
+            </div>
+            <div>
+              <input
+                type='checkbox'
+                id='css'
+                name='css'
+                onChange={this.handleChange}
+              />
+              <label htmlFor='css'>CSS</label>
+            </div>
+            <div>
+              <input
+                type='checkbox'
+                id='javascript'
+                name='javascript'
+                onChange={this.handleChange}
+              />
+              <label htmlFor='javascript'>JavaScript</label>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor='bio'>Bio</label> <br />
+            <textarea
+              id='bio'
+              name='bio'
+              defaultValue={bio}
+              onChange={this.handleChange}
+              cols='120'
+              rows='10'
+              placeholder='Write about yourself ...'
+            />
+          </div>
+
+          <div>
+            <input type='file' name='file' onChange={this.handleChange} />
+          </div>
+
+          <div>
+            <button className="btn">Submit</button>
           </div>
         </form>
       </div>
